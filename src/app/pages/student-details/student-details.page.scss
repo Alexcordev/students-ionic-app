@@ -1,0 +1,24 @@
+.card-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+}
+
+.card-body > h3{
+  font-size: 1.2em;
+  margin-bottom: 15px;
+
+}
+
+ion-card-content {
+  display: flex;
+}

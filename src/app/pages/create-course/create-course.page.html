@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-toolbar color="danger">
+    <ion-title>Cours</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">
+        <ion-icon color="dark" slot="icon-only" name="exit"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header class="card-header">
+      <ion-card-title>Ajouter un cours</ion-card-title>
+      <img src="../../../assets/images/graduate-icon.png" alt="icon" width="128" height="128">
+    </ion-card-header>
+    <ion-card-content>
+      <form style="display: flex; flex-direction: column;" [formGroup]="addCourseForm" (submit)="createCourse()">
+        <ion-list>
+          <ion-item>
+            <ion-label>Nom</ion-label>
+            <ion-input type="text" placeholder="Musique" formControlName="name" required></ion-input>
+          </ion-item>
+        <ion-item>
+          <ion-label>D&eacute;but</ion-label>
+          <ion-input type="text" placeholder="9:00" formControlName="start" required></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label>Dur&eacute;e</ion-label>
+          <ion-input type="text" placeholder="3:00" formControlName="duration" required></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label>Étudiant(s)</ion-label>
+          <ion-select class="options" multiple="true" formControlName="registrations" required>
+            <ion-select-option *ngFor="let student of students" value="{{student.surname + ' ' + student.name}}">{{ student.surname }}&nbsp;{{ student.name }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+        </ion-list>
+        <ion-button type="submit" color="danger" style="margin: 20px;" [disabled]="addCourseForm.invalid">Ajouter
+        </ion-button>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

@@ -1,0 +1,44 @@
+<ion-toolbar color="danger">
+  <ion-buttons slot="start">
+    <ion-menu-button color="light">
+    </ion-menu-button>
+  </ion-buttons>
+  <ion-buttons slot="end">
+  <ion-button (click)="logout()">
+    <ion-icon slot="end" name="log-out-outline"></ion-icon>
+  </ion-button>
+</ion-buttons>
+  <ion-title>ÉTUDIANTS</ion-title>
+</ion-toolbar>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <div>
+          <ion-list *ngFor="let student of students">
+            <ion-item-sliding>
+            <ion-item [routerLink]="['/home/student-details/', student._id]">
+              <ion-avatar slot="start">
+                <img src="../../../assets/images/student-avatar48x48.png" width="64" height="64">
+              </ion-avatar>
+              <ion-label>{{ student.surname }}&nbsp;{{ student.name }}</ion-label>
+              <ion-label >{{ student.dob }}</ion-label>
+            </ion-item>
+            <ion-item-options side="end">
+              <ion-item-option color="light" [routerLink]="['/home/create-student']"><ion-icon name="add"></ion-icon></ion-item-option>
+              <ion-item-option color="warning" [routerLink]="['/home/update-student', student._id]"><ion-icon name="sync-outline"></ion-icon></ion-item-option>
+              <ion-item-option color="danger" (click)="deleteStudent(student._id)"><ion-icon name="trash-outline"></ion-icon></ion-item-option>
+
+            </ion-item-options>
+          </ion-item-sliding>
+
+          </ion-list>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ng-template #empty>Aucun étudiant</ng-template>
+
+</ion-content>

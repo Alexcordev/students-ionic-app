@@ -1,0 +1,55 @@
+<ion-header>
+  <ion-toolbar color="danger">
+    <ion-title>Fiche de l'Étudiant</ion-title>
+    <ion-buttons slot="start">
+      <ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+    <ion-button (click)="logout()">
+      <ion-icon slot="icon-only" name="exit"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="student as st; else empty">
+<ion-grid>
+  <ion-row>
+    <ion-col>
+      <div>
+          <ion-card>
+            <ion-card-header class="card-header">
+               <img src="../../../assets/images/student-avatar128x128.png" width="128" height="128">
+            <ion-card-title>{{ st.surname }}&nbsp;{{ st.name }}</ion-card-title>
+              <ion-card-subtitle>{{st.dob}}</ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content class="card-body">
+              <form [formGroup]="updateStudentForm" #formDirective="ngForm" (submit)="updateStudent(formDirective)">
+                <ion-list>
+                  <ion-item>
+                    <ion-label>Pr&eacute;nom</ion-label>
+                    <ion-input type="text" placeholder="John Doe" formControlName="surname" name="surname" [value]="st.surname" requiredrequired></ion-input>
+                  </ion-item>
+                  <ion-item>
+                    <ion-label>Nom</ion-label>
+                    <ion-input type="text" placeholder="Nom" formControlName="name" name="name" [value]="st.name" required></ion-input>
+                  </ion-item>
+                  <ion-item>
+                    <ion-label>Naissance</ion-label>
+                    <ion-input type="date" formControlName="dob" name="dob" [value]="st.dob" required></ion-input>
+                  </ion-item>
+                </ion-list>
+                <div class="card-footer">
+                  <ion-button type="submit" color="danger" [disabled]="updateStudentForm.invalid">Ajouter
+                  </ion-button>
+                </div>
+
+               </form>
+            </ion-card-content>
+          </ion-card>
+        </div>
+    </ion-col>
+  </ion-row>
+</ion-grid>
+</ion-content>
+<ng-template #empty>Aucune données...</ng-template>
