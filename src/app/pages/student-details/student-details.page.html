@@ -4,11 +4,6 @@
     <ion-buttons slot="start">
       <ion-menu-button color="light"></ion-menu-button>
     </ion-buttons>
-    <ion-buttons slot="end">
-    <ion-button (click)="logout()">
-      <ion-icon slot="icon-only" name="exit"></ion-icon>
-    </ion-button>
-  </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -29,6 +24,8 @@
                   <ion-label>{{ course.course }}</ion-label>
                 </ion-chip>
               </div>
+              <ion-button type="button" color="danger" (click)="close();">Fermer
+              </ion-button>
             </ion-card-content>
           </ion-card>
         </div>

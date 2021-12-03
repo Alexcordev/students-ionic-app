@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { Student } from 'src/app/interfaces/student';
 import { StudentsService } from 'src/app/services/students.service';
@@ -19,28 +20,30 @@ export class CreateCoursePage implements OnInit {
   students: Student[] = [];
   registration: any;
   registration1: any;
-  registration2: any;
 
   constructor(
     private fb: FormBuilder,
     private coursesService: CoursesService,
     private studentsService: StudentsService,
-    private el: ElementRef,
+    private router: Router,
     private alertCtrl: AlertController
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.createForm();
+  }
 
   ionViewDidEnter() {
-    this.createForm();
     this.registration = this.coursesService.getCourses().subscribe((data) => {
       console.log(data);
       this.courses = data;
     });
-    this.registration1 = this.studentsService.getStudents().subscribe((data) => {
-      console.log(data);
-      this.students = data;
-    });
+    this.registration1 = this.studentsService
+      .getStudents()
+      .subscribe((data) => {
+        console.log(data);
+        this.students = data;
+      });
   }
 
   createForm() {
@@ -55,7 +58,7 @@ export class CreateCoursePage implements OnInit {
   createCourse() {
     if (this.addCourseForm.valid) {
       console.log(this.addCourseForm);
-      this.registration2 = this.coursesService.createCourse(this.addCourseForm.value).subscribe(
+      this.coursesService.createCourse(this.addCourseForm.value).subscribe(
         (data) => this.handleSuccess(data),
         (error) => this.handleError(error)
       );
@@ -79,16 +82,22 @@ export class CreateCoursePage implements OnInit {
       .create({
         header: text,
         message: message,
-        buttons: ['Ok']
+        buttons: ['Ok'],
       })
-      .then(alertEl => alertEl.present());
+      .then((alertEl) => alertEl.present());
   }
 
   ngOnDestroy() {
     this.registration.unsubscribe();
     this.registration1.unsubscribe();
-    this.registration2.unsubscribe();
   }
 
+  close() {
+    this.ngOnDestroy();
+    this.router.navigate(['/home/courses']);
+  }
 
+  ionViewDidLeave() {
+    this.ngOnDestroy();
+  }
 }

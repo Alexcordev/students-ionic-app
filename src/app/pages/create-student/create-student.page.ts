@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { Student } from '../../interfaces/student';
 import { StudentsService } from '../../services/students.service';
@@ -15,19 +16,17 @@ export class CreateStudentPage implements OnInit {
   addStudentForm: any;
   students: Student[] = [];
   registration: any;
-  registration1: any;
 
   constructor(
     private fb: FormBuilder,
     private studentsService: StudentsService,
-    private el: ElementRef,
+    private router: Router,
     private alertCtrl: AlertController
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {this.createForm();}
 
   ionViewDidEnter() {
-    this.createForm();
     this.registration = this.studentsService.getStudents().subscribe((data) => {
       console.log(data);
       this.students = data;
@@ -45,7 +44,7 @@ export class CreateStudentPage implements OnInit {
   createStudent() {
     if (this.addStudentForm.valid) {
       console.log(this.addStudentForm);
-      this.registration1 = this.studentsService.createStudent(this.addStudentForm.value).subscribe(
+      this.studentsService.createStudent(this.addStudentForm.value).subscribe(
         (data) => this.handleSuccess(data),
         (error) => this.handleError(error)
       );
@@ -75,8 +74,16 @@ export class CreateStudentPage implements OnInit {
   }
 
   ngOnDestroy() {
-    this.registration1.unsubscribe();
-    this.registration1.unsubscribe();
+    this.registration.unsubscribe();
+  }
+
+  close() {
+    this.ngOnDestroy();
+    this.router.navigate(['/home/students']);
+  }
+
+  ionViewDidLeave() {
+    this.ngOnDestroy();
   }
 
 }

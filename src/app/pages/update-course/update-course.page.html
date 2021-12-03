@@ -4,11 +4,6 @@
     <ion-buttons slot="start">
       <ion-menu-button color="light"></ion-menu-button>
     </ion-buttons>
-    <ion-buttons slot="end">
-      <ion-button (click)="logout()">
-        <ion-icon slot="icon-only" name="exit"></ion-icon>
-      </ion-button>
-    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -42,14 +37,16 @@
                   </ion-item>
                   <ion-item>
                     <ion-label>Étudiant(s)</ion-label>
-                    <ion-select class="options" multiple="true" formControlName="registrations" required>
-                      <ion-select-option *ngFor="let student of students">
+                    <ion-select multiple="true" formControlName="registrations" required>
+                      <ion-select-option *ngFor="let student of students" value="{{student.surname + ' ' + student.name}}">
                         {{student.surname}}&nbsp;{{student.name}}</ion-select-option>
                     </ion-select>
                   </ion-item>
                 </ion-list>
                 <div class="card-footer">
-                  <ion-button type="submit" color="danger" [disabled]="updateCourseForm.invalid">Modifier
+                  <ion-button type="submit" color="warning" [disabled]="updateCourseForm.invalid">Modifier
+                  </ion-button>
+                  <ion-button type="button" color="danger" (click)="close();">Annuler
                   </ion-button>
                 </div>
               </form>

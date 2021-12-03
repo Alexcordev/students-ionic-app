@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CoursesService } from '../../services/courses.service';
 import { StudentsService } from '../../services/students.service';
 import { FormBuilder, FormGroupDirective } from '@angular/forms';
-import { AuthService } from 'src/app/services/auth.service';
 import { AlertController } from '@ionic/angular';
 import { Course } from 'src/app/interfaces/course';
 import { Student } from 'src/app/interfaces/student';
@@ -24,17 +23,13 @@ export class UpdateCoursePage implements OnInit {
   registration: any;
   registration1: any;
   registration2: any;
-  registration3: any;
-  registration4: any;
 
   constructor(
     private router: Router,
     private fb: FormBuilder,
     private alertCtrl: AlertController,
-    private authService: AuthService,
     private coursesService: CoursesService,
     private studentsService: StudentsService,
-    private el: ElementRef,
     private activatedRoute: ActivatedRoute
   ) {}
 
@@ -42,14 +37,16 @@ export class UpdateCoursePage implements OnInit {
 
   ionViewDidEnter() {
     this.courseId = this.activatedRoute.snapshot.paramMap.get('id');
-    this.registration = this.coursesService.getCourseById(this.courseId).subscribe(
-      (data) => {
-        this.course = data;
-        console.log(this.course);
-        this.createForm();
-      },
-      (error) => console.error(error)
-    );
+    this.registration = this.coursesService
+      .getCourseById(this.courseId)
+      .subscribe(
+        (data) => {
+          this.course = data;
+          this.createForm();
+          console.log(this.course);
+        },
+        (error) => console.error(error)
+      );
 
     this.registration1 = this.studentsService.getStudents().subscribe(
       (data) => {
@@ -59,14 +56,14 @@ export class UpdateCoursePage implements OnInit {
       (error) => console.error(error)
     );
     console.log('View entered');
-}
+  }
 
   createForm() {
     this.updateCourseForm = this.fb.group({
       name: this.course.name,
       start: this.course.start,
       duration: this.course.duration,
-      registrations: [this.course.registrations]
+      registrations: [this.course.registrations],
     });
   }
   updateCourse(formDirective: FormGroupDirective) {
@@ -86,11 +83,10 @@ export class UpdateCoursePage implements OnInit {
     this.updateCourseForm.reset();
     formDirective.reset();
     formDirective.resetForm();
-    this.router.navigateByUrl('/home/courses', {skipLocationChange: true}).then(() => {
-      this.router.navigate(['/home/courses']);
-  });
+    this.ngOnDestroy();
     this.coursesService.dispatchCourseCreated(data._id);
-}
+    this.router.navigate(['/home/courses']);
+  }
 
   handleError(error: any) {
     console.log('KO handleError - course NOT updated', error);
@@ -98,7 +94,7 @@ export class UpdateCoursePage implements OnInit {
 
   refresh(data: any) {
     console.log('data', data);
-    this.registration3 = this.coursesService.getCourseById(this.courseId).subscribe((data) => {
+    this.coursesService.getCourseById(this.courseId).subscribe((data) => {
       this.course = data;
     });
   }
@@ -108,29 +104,22 @@ export class UpdateCoursePage implements OnInit {
       .create({
         header: text,
         message: message,
-        buttons: ['Ok']
+        buttons: ['Ok'],
       })
-      .then(alertEl => alertEl.present());
+      .then((alertEl) => alertEl.present());
   }
 
-  logout() {
-    this.message = 'Vous êtes maintenant déconnecté';
-    this.registration4 = this.authService.logout().subscribe((data) => {
-      this.text = 'Au revoir ';
-      console.log(data);
-      this.registration4 = this.authService.showAlert(this.text, this.message);
-      this.router.navigate(['']);
-    });
+  close() {
+    this.registration.unsubscribe();
+    this.registration1.unsubscribe();
+    this.router.navigate(['/home/courses']);
   }
 
   ngOnDestroy() {
     this.registration.unsubscribe();
     this.registration1.unsubscribe();
     this.registration2.unsubscribe();
-    this.registration3.unsubscribe();
-    this.registration4.unsubscribe();
     console.log('destroyed');
   }
 
 }
-

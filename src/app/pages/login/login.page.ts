@@ -20,7 +20,6 @@ export class LoginPage implements OnInit {
   isLogin = true;
   storedData: any;
   userInfo = null;
-  registration: any;
 
   constructor(
     private authService: AuthService,
@@ -32,8 +31,8 @@ export class LoginPage implements OnInit {
   async ngOnInit() {}
 
   login() {
-    let authObs: Observable<any>;
-    this.registration = authObs = this.authService.login(this.user);
+    let authObs: Observable<User>;
+    authObs = this.authService.login(this.user);
     authObs.subscribe(
       (data) => this.loginSuccess(data),
       (error) => this.loginError(error)
@@ -82,10 +81,5 @@ export class LoginPage implements OnInit {
         buttons: ['Ok'],
       })
       .then((alertEl) => alertEl.present());
-  }
-
-  ngOnDestroy() {
-    this.registration.unsubscribe();
-    console.log('destroyed');
   }
 }

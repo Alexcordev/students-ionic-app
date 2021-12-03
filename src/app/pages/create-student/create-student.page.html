@@ -1,10 +1,9 @@
 <ion-header>
   <ion-toolbar color="danger">
     <ion-title>Étudiant</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="logout()">
-        <ion-icon color="dark" slot="icon-only" name="exit"></ion-icon>
-      </ion-button>
+    <ion-buttons slot="start">
+      <ion-menu-button color="light">
+      </ion-menu-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -20,19 +19,20 @@
         <ion-list>
           <ion-item>
             <ion-label>Pr&eacute;nom</ion-label>
-            <ion-input type="text" placeholder="John Doe" formControlName="surname" required></ion-input>
+            <ion-input type="text" placeholder="John" formControlName="surname" required></ion-input>
           </ion-item>
           <ion-item>
             <ion-label>Nom</ion-label>
-            <ion-input type="text" placeholder="Nom" formControlName="name" required></ion-input>
+            <ion-input type="text" placeholder="Doe" formControlName="name" required></ion-input>
           </ion-item>
           <ion-item>
             <ion-label>Naissance</ion-label>
             <ion-input type="date" formControlName="dob" required></ion-input>
           </ion-item>
         </ion-list>
-        <ion-button type="submit" color="danger" style="margin: 20px;" [disabled]="addStudentForm.invalid">Ajouter
+        <ion-button type="submit" color="danger" style="margin: 10px;" [disabled]="addStudentForm.invalid">Ajouter
         </ion-button>
+        <ion-button type="button" color="warning" style="margin: 10px;" (click)="close();">Annuler</ion-button>
       </form>
     </ion-card-content>
   </ion-card>

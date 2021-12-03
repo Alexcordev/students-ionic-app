@@ -5,7 +5,6 @@ import { Course } from '../../interfaces/course';
 import { Student } from '../../interfaces/student';
 import { StudentsService } from '../../services/students.service';
 import { CoursesService } from '../../services/courses.service';
-import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-student-details',
@@ -20,24 +19,28 @@ export class StudentDetailsPage implements OnInit {
   message: string = '';
   text: string = '';
   registration: any;
-  registration1: any;
-  registration2: any;
 
-  constructor(private router: Router, private authService: AuthService, private coursesService: CoursesService, private activatedRoute: ActivatedRoute, private studentsService: StudentsService) { }
+  constructor(
+    private router: Router,
+    private coursesService: CoursesService,
+    private activatedRoute: ActivatedRoute,
+    private studentsService: StudentsService
+  ) {}
 
   ngOnInit() {}
 
   ionViewDidEnter() {
     this.id = this.activatedRoute.snapshot.paramMap.get('id');
-    this.registration = this.student$ = this.studentsService.getStudentById(this.id);
-    this.registration1 = this.coursesService.getCourses().subscribe((res) => {
+    this.student$ = this.studentsService.getStudentById(this.id);
+    this.registration = this.coursesService.getCourses().subscribe((res) => {
       this.courses = res;
       this.getStudentCourses(this.courses);
+      console.log('view entered');
     });
-    console.log('view entered');
-}
+  }
 
   getStudentCourses(tab: Course[]) {
+    this.studentCourses = [];
     let elem: Course;
     let course: any = '';
     let students: any = '';
@@ -54,21 +57,13 @@ export class StudentDetailsPage implements OnInit {
     console.log(this.studentCourses);
   }
 
-  logout() {
-    this.message = 'Vous êtes maintenant déconnecté';
-    this.registration2 = this.authService.logout().subscribe((data) => {
-      this.text = 'Au revoir ';
-      console.log(data);
-      this.authService.showAlert(this.text, this.message);
-      this.router.navigate(['']);
-    });
-  }
-
   ngOnDestroy() {
     this.registration.unsubscribe();
-    this.registration1.unsubscribe();
-    this.registration2.unsubscribe();
     console.log('Destroyed');
   }
 
+  close() {
+    this.ngOnDestroy();
+    this.router.navigate(['/home/students']);
+  }
 }

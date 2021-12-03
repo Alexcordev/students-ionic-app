@@ -11,7 +11,12 @@ import { AuthService } from '../../src/app/services/auth.service';
 export class AppComponent {
   message: string;
   text: string;
-  constructor(private menu: MenuController, private router: Router, private authService: AuthService, private platform: Platform) {}
+  constructor(
+    private menu: MenuController,
+    private router: Router,
+    private authService: AuthService,
+    private platform: Platform
+  ) {}
 
   openEnd() {
     this.menu.close();
@@ -24,7 +29,7 @@ export class AppComponent {
       console.log(data);
       this.authService.showAlert(this.text, this.message);
       this.openEnd();
-      this.router.navigate(['']);
+      this.router.navigate(['/login']);
     });
   }
 }

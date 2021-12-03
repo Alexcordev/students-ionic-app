@@ -2,7 +2,6 @@ import { Component, OnInit, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StudentsService } from '../../services/students.service';
 import { FormBuilder, FormGroupDirective } from '@angular/forms';
-import { AuthService } from 'src/app/services/auth.service';
 import { AlertController } from '@ionic/angular';
 import { Student } from 'src/app/interfaces/student';
 
@@ -20,15 +19,12 @@ export class UpdateStudentPage implements OnInit {
   errorFromServer = '';
   registration: any;
   registration1: any;
-  registration2: any;
 
   constructor(
     private router: Router,
     private fb: FormBuilder,
     private alertCtrl: AlertController,
-    private authService: AuthService,
     private studentsService: StudentsService,
-    private el: ElementRef,
     private activatedRoute: ActivatedRoute
   ) {}
 
@@ -39,8 +35,8 @@ export class UpdateStudentPage implements OnInit {
     this.registration = this.studentsService.getStudentById(this.studentId).subscribe(
       (data) => {
         this.student = data;
-        console.log(this.student);
         this.createForm();
+        console.log(this.student);
       },
       (error) => console.error(error)
     );
@@ -71,12 +67,9 @@ export class UpdateStudentPage implements OnInit {
     this.updateStudentForm.reset();
     formDirective.reset();
     formDirective.resetForm();
-    this.router
-      .navigateByUrl('/home/students', { skipLocationChange: true })
-      .then(() => {
-        this.router.navigate(['/home/students']);
-      });
     this.studentsService.dispatchStudentCreated(data._id);
+    this.ngOnDestroy();
+    this.router.navigate(['/home/students']);
   }
 
   handleError(error: any) {
@@ -100,21 +93,18 @@ export class UpdateStudentPage implements OnInit {
       .then((alertEl) => alertEl.present());
   }
 
-  logout() {
-    this.message = 'Vous êtes maintenant déconnecté';
-    this.registration2 = this.authService.logout().subscribe((data) => {
-      this.text = 'Au revoir ';
-      console.log(data);
-      this.authService.showAlert(this.text, this.message);
-      this.router.navigate(['']);
-    });
-
-  }
-
   ngOnDestroy() {
     this.registration.unsubscribe();
     this.registration1.unsubscribe();
-    this.registration2.unsubscribe();
     console.log('destroyed');
+  }
+
+  close() {
+    this.registration.unsubscribe();
+    this.router.navigate(['/home/students']);
+  }
+
+  ionViewDidLeave() {
+    this.registration.unsubscribe();
   }
 }

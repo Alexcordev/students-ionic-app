@@ -10,13 +10,15 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
 
+form {
+  max-width: 90%;
 }
 
 .card-body > h3{
   font-size: 1.2em;
   margin-bottom: 15px;
-
 }
 
 .card-footer {

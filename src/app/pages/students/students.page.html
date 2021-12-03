@@ -3,11 +3,6 @@
     <ion-menu-button color="light">
     </ion-menu-button>
   </ion-buttons>
-  <ion-buttons slot="end">
-  <ion-button (click)="logout()">
-    <ion-icon slot="end" name="log-out-outline"></ion-icon>
-  </ion-button>
-</ion-buttons>
   <ion-title>ÉTUDIANTS</ion-title>
 </ion-toolbar>
 
@@ -15,7 +10,7 @@
   <ion-grid>
     <ion-row>
       <ion-col>
-        <div>
+        <div *ngIf="students.length > 0; else nothing">
           <ion-list *ngFor="let student of students">
             <ion-item-sliding>
             <ion-item [routerLink]="['/home/student-details/', student._id]">
@@ -39,6 +34,11 @@
     </ion-row>
   </ion-grid>
 
-  <ng-template #empty>Aucun étudiant</ng-template>
+  <ng-template  #nothing>
+    <div class="message">
+      <p>Aucun étudiant</p>
+      <ion-button color="warning" [routerLink]="['/home/create-student']"><ion-icon name="add"></ion-icon></ion-button>
+    </div>
+  </ng-template>
 
 </ion-content>

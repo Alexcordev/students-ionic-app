@@ -3,11 +3,6 @@
     <ion-menu-button color="light">
     </ion-menu-button>
   </ion-buttons>
-  <ion-buttons slot="end">
-  <ion-button (click)="logout()">
-    <ion-icon slot="end" name="log-out-outline"></ion-icon>
-  </ion-button>
-</ion-buttons>
   <ion-title>COURS</ion-title>
 </ion-toolbar>
 
@@ -15,7 +10,7 @@
   <ion-grid>
     <ion-row>
       <ion-col>
-        <div>
+        <div *ngIf="courses.length > 0; else nothing">
           <ion-list *ngFor="let course of courses">
             <ion-item-sliding>
             <ion-item [routerLink]="['/home/course-details/', course._id]">
@@ -39,6 +34,11 @@
     </ion-row>
   </ion-grid>
 
-  <ng-template #empty>Aucun Cours</ng-template>
+  <ng-template  #nothing>
+    <div class="message">
+      <p>Aucun cours</p>
+      <ion-button color="warning" [routerLink]="['/home/create-course']"><ion-icon name="add"></ion-icon></ion-button>
+    </div>
+  </ng-template>
 
 </ion-content>

@@ -18,11 +18,14 @@ export class StudentsPage implements OnInit {
   students: Student[] = [];
   errorFromServer: string = '';
   registration: any;
-  registration1: any;
-  registration2: any;
-  registration3: any;
 
-  constructor(private alertCtrl: AlertController, private loadingCtrl: LoadingController, private router: Router, private authService: AuthService, private studentsService: StudentsService) { }
+  constructor(
+    private alertCtrl: AlertController,
+    private loadingCtrl: LoadingController,
+    private router: Router,
+    private authService: AuthService,
+    private studentsService: StudentsService
+  ) {}
 
   ngOnInit() {}
 
@@ -34,25 +37,28 @@ export class StudentsPage implements OnInit {
   async getAllStudents() {
     let loading = await this.loadingCtrl.create();
     await loading.present();
-    this.registration = this.studentsService.getStudents().pipe(
-    finalize(() => loading.dismiss())
-    )
-     .subscribe(data => {
-      console.log(data);
-      this.refresh(data);
-      this.students = data;
-    }, err => {
-      console.log('erreur', err);
-    });
+    this.registration = this.studentsService
+      .getStudents()
+      .pipe(finalize(() => loading.dismiss()))
+      .subscribe(
+        (data) => {
+          console.log(data);
+          this.students = data;
+        },
+        (err) => {
+          console.log('erreur', err);
+        }
+      );
   }
 
   deleteStudent(id: any) {
     if (id) {
-      this.registration1 = this.studentsService.deleteStudentById(id).subscribe(
+      let registration = this.studentsService.deleteStudentById(id).subscribe(
         (data) => {
-          this.showAlert("Étudiant Supprimé", "Opération complétée");
+          this.showAlert('Étudiant Supprimé', 'Opération complétée');
           console.log(data);
           this.refresh(data);
+          registration.unsubscribe();
         },
         (err) => {
           return this.handleError(err);
@@ -63,7 +69,7 @@ export class StudentsPage implements OnInit {
 
   refresh(data: any) {
     console.log('data', data);
-    this.registration2 = this.studentsService.getStudents().subscribe((data) => {
+    this.studentsService.getStudents().subscribe((data) => {
       this.students = data;
     });
   }
@@ -76,32 +82,22 @@ export class StudentsPage implements OnInit {
     }
   }
 
-  logout() {
-    this.message = 'Vous êtes maintenant déconnecté';
-    this.registration3 = this.authService.logout().subscribe((data) => {
-      this.text = 'Au revoir ';
-      console.log(data);
-      this.showAlert(this.text, this.message);
-      this.router.navigate(['']);
-    });
+  private showAlert(text: string, message: string) {
+    this.alertCtrl
+      .create({
+        header: text,
+        message: message,
+        buttons: ['Ok'],
+      })
+      .then((alertEl) => alertEl.present());
   }
-    private showAlert(text: string, message: string) {
-      this.alertCtrl
-        .create({
-          header: text,
-          message: message,
-          buttons: ['Ok']
-        })
-        .then(alertEl => alertEl.present());
-    }
 
-    ngOnDestroy() {
-      this.registration.unsubscribe();
-      this.registration1.unsubscribe();
-      this.registration2.unsubscribe();
-      this.registration3.unsubscribe();
-      console.log('destroyed');
-    }
+  ngOnDestroy() {
+    this.registration.unsubscribe();
+    console.log('destroyed');
+  }
 
+  ionViewDidLeave() {
+    this.ngOnDestroy();
+  }
 }
-
