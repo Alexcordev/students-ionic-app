@@ -101,12 +101,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api", api);
 app.use("/auth", auth);
 
-app.use(express.static(__dirname+'/www'));
-
-app.get('/*', function(req,res) {
-  res.sendFile(path.join(__dirname+'/www/index.html'));
-});
-
+app.use(express.static('www'));
 
 // connection to mongoDB
 const uri =
