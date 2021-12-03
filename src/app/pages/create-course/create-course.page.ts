@@ -94,6 +94,7 @@ export class CreateCoursePage implements OnInit {
 
   close() {
     this.ngOnDestroy();
+    this.addCourseForm.reset();
     this.router.navigate(['/home/courses']);
   }
 

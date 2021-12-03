@@ -79,6 +79,7 @@ export class CreateStudentPage implements OnInit {
 
   close() {
     this.ngOnDestroy();
+    this.addStudentForm.reset();
     this.router.navigate(['/home/students']);
   }
 
