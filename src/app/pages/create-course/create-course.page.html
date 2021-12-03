@@ -11,7 +11,7 @@
 <ion-content>
   <ion-card>
     <ion-card-header class="card-header">
-      <ion-card-title>Ajouter un cours</ion-card-title>
+      <ion-card-title color="light">Ajouter un cours</ion-card-title>
       <img src="../../../assets/images/graduate-icon.png" alt="icon" width="128" height="128">
     </ion-card-header>
     <ion-card-content>
@@ -31,7 +31,7 @@
           </ion-item>
           <ion-item>
             <ion-label>Étudiant(s)</ion-label>
-            <ion-select class="options" multiple="true" formControlName="registrations" required>
+            <ion-select multiple="true" formControlName="registrations" required>
               <ion-select-option *ngFor="let student of students" value="{{student.surname + ' ' + student.name}}">
                 {{ student.surname }}&nbsp;{{ student.name }}</ion-select-option>
             </ion-select>

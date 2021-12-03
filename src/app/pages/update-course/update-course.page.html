@@ -15,7 +15,7 @@
           <ion-card>
             <ion-card-header class="card-header">
               <img src="../../../assets/images/graduate-icon.png" width="128" height="128">
-              <ion-card-title>{{ crs.name }}</ion-card-title>
+              <ion-card-title color="light">{{ crs.name }}</ion-card-title>
             </ion-card-header>
             <ion-card-content class="card-body">
               <form [formGroup]="updateCourseForm" #formDirective="ngForm" (submit)="updateCourse(formDirective)">

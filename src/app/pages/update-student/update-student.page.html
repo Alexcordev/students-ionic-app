@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar color="danger">
-    <ion-title>Fiche de l'Étudiant</ion-title>
+    <ion-title>Modifier le Profil</ion-title>
     <ion-buttons slot="start">
       <ion-menu-button color="light"></ion-menu-button>
     </ion-buttons>
@@ -15,7 +15,7 @@
           <ion-card>
             <ion-card-header class="card-header">
               <img src="../../../assets/images/student-avatar128x128.png" width="128" height="128">
-              <ion-card-title>{{ st.surname }}&nbsp;{{ st.name }}</ion-card-title>
+              <ion-card-title color="light">{{ st.surname }}&nbsp;{{ st.name }}</ion-card-title>
               <ion-card-subtitle>{{st.dob}}</ion-card-subtitle>
             </ion-card-header>
             <ion-card-content class="card-body">
@@ -24,7 +24,7 @@
                   <ion-item>
                     <ion-label>Pr&eacute;nom</ion-label>
                     <ion-input type="text" placeholder="John Doe" formControlName="surname" name="surname"
-                      [value]="st.surname" requiredrequired></ion-input>
+                      [value]="st.surname" required></ion-input>
                   </ion-item>
                   <ion-item>
                     <ion-label>Nom</ion-label>

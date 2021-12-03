@@ -5,7 +5,6 @@ import { Student } from 'src/app/interfaces/student';
 import { StudentsService } from 'src/app/services/students.service';
 import { LoadingController, AlertController } from '@ionic/angular';
 import { finalize, tap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-students',

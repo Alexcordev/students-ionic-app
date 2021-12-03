@@ -4,12 +4,11 @@ import { Observable, Subject } from 'rxjs';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 
-
 @Injectable({
   providedIn: 'root',
 })
 export class CoursesService {
-  baseUrl: string = "http://192.168.2.14:3000/api";
+  baseUrl: string = 'http://192.168.2.14:3000/api';
   private courseUpdated = new Subject<string>();
   private courseCreated = new Subject<string>();
 
