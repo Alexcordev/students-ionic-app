@@ -101,16 +101,15 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api", api);
 app.use("/auth", auth);
 
-app.use(express.static(__dirname+'/dist/student-management'));
+app.use(express.static(__dirname+'/www'));
 
 app.get('/*', function(req,res) {
-  res.sendFile(path.join(__dirname+'/dist/student-management/index.html'));
+  res.sendFile(path.join(__dirname+'/www/index.html'));
 });
 
 
 // connection to mongoDB
 const uri =
-
 mongoose.connect(process.env.MONGODB_URI || config.mongoURI, {
   useUnifiedTopology: true,
   useNewUrlParser: true,
