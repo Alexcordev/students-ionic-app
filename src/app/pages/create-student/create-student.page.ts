@@ -24,7 +24,9 @@ export class CreateStudentPage implements OnInit {
     private alertCtrl: AlertController
   ) {}
 
-  ngOnInit() {this.createForm();}
+  ngOnInit() {
+    this.createForm();
+  }
 
   ionViewDidEnter() {
     this.registration = this.studentsService.getStudents().subscribe((data) => {
@@ -68,9 +70,9 @@ export class CreateStudentPage implements OnInit {
       .create({
         header: text,
         message: message,
-        buttons: ['Ok']
+        buttons: ['Ok'],
       })
-      .then(alertEl => alertEl.present());
+      .then((alertEl) => alertEl.present());
   }
 
   ngOnDestroy() {
@@ -86,5 +88,4 @@ export class CreateStudentPage implements OnInit {
   ionViewDidLeave() {
     this.ngOnDestroy();
   }
-
 }

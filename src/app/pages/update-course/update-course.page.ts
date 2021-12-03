@@ -121,5 +121,4 @@ export class UpdateCoursePage implements OnInit {
     this.registration2.unsubscribe();
     console.log('destroyed');
   }
-
 }

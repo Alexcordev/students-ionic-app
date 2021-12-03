@@ -26,7 +26,6 @@ export class CourseDetailsPage implements OnInit {
 
   ngOnInit() {}
 
-
   ionViewDidEnter() {
     this.id = this.activatedRoute.snapshot.paramMap.get('id');
     this.course$ = this.coursesService.getCourseById(this.id);

@@ -21,22 +21,24 @@
             <ion-label>Nom</ion-label>
             <ion-input type="text" placeholder="Musique" formControlName="name" required></ion-input>
           </ion-item>
-        <ion-item>
-          <ion-label>D&eacute;but</ion-label>
-          <ion-input type="text" placeholder="9:00" formControlName="start" required></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label>Dur&eacute;e</ion-label>
-          <ion-input type="text" placeholder="3:00" formControlName="duration" required></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label>Étudiant(s)</ion-label>
-          <ion-select class="options" multiple="true" formControlName="registrations" required>
-            <ion-select-option *ngFor="let student of students" value="{{student.surname + ' ' + student.name}}">{{ student.surname }}&nbsp;{{ student.name }}</ion-select-option>
-          </ion-select>
-        </ion-item>
+          <ion-item>
+            <ion-label>D&eacute;but</ion-label>
+            <ion-input type="text" placeholder="9:00" formControlName="start" required></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label>Dur&eacute;e</ion-label>
+            <ion-input type="text" placeholder="3:00" formControlName="duration" required></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label>Étudiant(s)</ion-label>
+            <ion-select class="options" multiple="true" formControlName="registrations" required>
+              <ion-select-option *ngFor="let student of students" value="{{student.surname + ' ' + student.name}}">
+                {{ student.surname }}&nbsp;{{ student.name }}</ion-select-option>
+            </ion-select>
+          </ion-item>
         </ion-list>
-        <ion-button type="submit" color="danger" style="margin: 10px;" [disabled]="addCourseForm.invalid">Ajouter</ion-button>
+        <ion-button type="submit" color="danger" style="margin: 10px;" [disabled]="addCourseForm.invalid">Ajouter
+        </ion-button>
         <ion-button type="button" color="warning" style="margin: 10px;" (click)="close();">Annuler</ion-button>
 
       </form>

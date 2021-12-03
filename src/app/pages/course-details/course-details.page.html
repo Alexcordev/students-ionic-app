@@ -8,20 +8,20 @@
 </ion-header>
 
 <ion-content *ngIf="(course$ | async) as crs; else empty">
-<ion-grid>
-  <ion-row>
-    <ion-col>
-      <div>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <div>
           <ion-card>
             <ion-card-header class="card-header">
-               <img src="../../../assets/images/graduate-icon.png" width="128" height="128">
-            <ion-card-title>{{ crs.name }}</ion-card-title>
+              <img src="../../../assets/images/graduate-icon.png" width="128" height="128">
+              <ion-card-title>{{ crs.name }}</ion-card-title>
               <ion-card-subtitle>Dur&eacute;e&nbsp;{{crs.duration}}</ion-card-subtitle>
               <ion-card-subtitle>D&eacute;but:&nbsp;{{crs.start}}</ion-card-subtitle>
             </ion-card-header>
             <ion-card-content class="card-body">
-                <div *ngFor="let student of studentCourses">
-                  <ion-chip *ngIf="student.course === crs.name">
+              <div *ngFor="let student of studentCourses">
+                <ion-chip *ngIf="student.course === crs.name">
                   <ion-label>{{ student.students }}</ion-label>
                 </ion-chip>
               </div>
@@ -29,8 +29,8 @@
             </ion-card-content>
           </ion-card>
         </div>
-    </ion-col>
-  </ion-row>
-</ion-grid>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
 <ng-template #empty>Aucune données...</ng-template>

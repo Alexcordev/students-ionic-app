@@ -32,14 +32,16 @@ export class UpdateStudentPage implements OnInit {
 
   ionViewDidEnter() {
     this.studentId = this.activatedRoute.snapshot.paramMap.get('id');
-    this.registration = this.studentsService.getStudentById(this.studentId).subscribe(
-      (data) => {
-        this.student = data;
-        this.createForm();
-        console.log(this.student);
-      },
-      (error) => console.error(error)
-    );
+    this.registration = this.studentsService
+      .getStudentById(this.studentId)
+      .subscribe(
+        (data) => {
+          this.student = data;
+          this.createForm();
+          console.log(this.student);
+        },
+        (error) => console.error(error)
+      );
     console.log('view entered');
   }
 

@@ -38,7 +38,8 @@
                   <ion-item>
                     <ion-label>Étudiant(s)</ion-label>
                     <ion-select multiple="true" formControlName="registrations" required>
-                      <ion-select-option *ngFor="let student of students" value="{{student.surname + ' ' + student.name}}">
+                      <ion-select-option *ngFor="let student of students"
+                        value="{{student.surname + ' ' + student.name}}">
                         {{student.surname}}&nbsp;{{student.name}}</ion-select-option>
                     </ion-select>
                   </ion-item>
