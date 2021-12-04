@@ -8,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root',
 })
 export class CoursesService {
-  baseUrl: string = "http://192.168.2.14:3000/api";
+  baseUrl: string = "/api";
   private courseUpdated = new Subject<string>();
   private courseCreated = new Subject<string>();
 
