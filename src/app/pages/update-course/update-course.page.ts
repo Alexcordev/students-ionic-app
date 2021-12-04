@@ -1,8 +1,10 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
+import { Component, OnInit, ElementRef, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FormBuilder, FormGroupDirective } from '@angular/forms';
+import { Subscription } from 'rxjs';
+
 import { CoursesService } from '../../services/courses.service';
 import { StudentsService } from '../../services/students.service';
-import { FormBuilder, FormGroupDirective } from '@angular/forms';
 import { AlertController } from '@ionic/angular';
 import { Course } from 'src/app/interfaces/course';
 import { Student } from 'src/app/interfaces/student';
@@ -12,7 +14,7 @@ import { Student } from 'src/app/interfaces/student';
   templateUrl: './update-course.page.html',
   styleUrls: ['./update-course.page.scss'],
 })
-export class UpdateCoursePage implements OnInit {
+export class UpdateCoursePage implements OnInit, OnDestroy{
   updateCourseForm: any;
   courseId: any = '';
   course: Course;
@@ -20,9 +22,9 @@ export class UpdateCoursePage implements OnInit {
   message: string = '';
   text: string = '';
   errorFromServer = '';
-  registration: any;
-  registration1: any;
-  registration2: any;
+  subCourse: Subscription;
+  subStudents: Subscription;
+  subUpdate: Subscription;
 
   constructor(
     private router: Router,
@@ -37,7 +39,7 @@ export class UpdateCoursePage implements OnInit {
 
   ionViewDidEnter() {
     this.courseId = this.activatedRoute.snapshot.paramMap.get('id');
-    this.registration = this.coursesService
+    this.subCourse = this.coursesService
       .getCourseById(this.courseId)
       .subscribe(
         (data) => {
@@ -48,7 +50,7 @@ export class UpdateCoursePage implements OnInit {
         (error) => console.error(error)
       );
 
-    this.registration1 = this.studentsService.getStudents().subscribe(
+    this.subStudents = this.studentsService.getStudents().subscribe(
       (data) => {
         this.students = data;
         console.log(this.students);
@@ -69,7 +71,7 @@ export class UpdateCoursePage implements OnInit {
   updateCourse(formDirective: FormGroupDirective) {
     if (this.updateCourseForm.valid) {
       console.log(this.updateCourseForm);
-      this.registration2 = this.coursesService
+      this.subUpdate = this.coursesService
         .updateCourseById(this.courseId, this.updateCourseForm.value)
         .subscribe(
           (data) => this.handleSuccess(data, formDirective),
@@ -110,15 +112,18 @@ export class UpdateCoursePage implements OnInit {
   }
 
   close() {
-    this.registration.unsubscribe();
-    this.registration1.unsubscribe();
     this.router.navigate(['/home/courses']);
   }
 
   ngOnDestroy() {
-    this.registration.unsubscribe();
-    this.registration1.unsubscribe();
-    this.registration2.unsubscribe();
-    console.log('destroyed');
+    if(this.subCourse) {
+      this.subCourse.unsubscribe();
+    } else if(this.subStudents) {
+      this.subStudents.unsubscribe();
+    } else if(this.subUpdate) {
+      this.subUpdate.unsubscribe();
+    } else {
+      return false;
+    }
   }
 }

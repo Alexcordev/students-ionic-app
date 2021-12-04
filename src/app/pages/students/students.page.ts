@@ -1,28 +1,30 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { Student } from 'src/app/interfaces/student';
 import { StudentsService } from 'src/app/services/students.service';
 import { LoadingController, AlertController } from '@ionic/angular';
 import { finalize, tap } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-students',
   templateUrl: './students.page.html',
   styleUrls: ['./students.page.scss'],
 })
-export class StudentsPage implements OnInit {
+export class StudentsPage implements OnInit, OnDestroy {
   message: string;
   text: string;
   students: Student[] = [];
   errorFromServer: string = '';
-  registration: any;
+  subStudents: Subscription;
+  subStudentDel: Subscription;
+  subStudentsRefresh: Subscription;
 
   constructor(
     private alertCtrl: AlertController,
     private loadingCtrl: LoadingController,
     private router: Router,
-    private authService: AuthService,
     private studentsService: StudentsService
   ) {}
 
@@ -36,7 +38,7 @@ export class StudentsPage implements OnInit {
   async getAllStudents() {
     let loading = await this.loadingCtrl.create();
     await loading.present();
-    this.registration = this.studentsService
+    this.subStudents = this.studentsService
       .getStudents()
       .pipe(finalize(() => loading.dismiss()))
       .subscribe(
@@ -52,12 +54,11 @@ export class StudentsPage implements OnInit {
 
   deleteStudent(id: any) {
     if (id) {
-      let registration = this.studentsService.deleteStudentById(id).subscribe(
+      this.subStudentDel = this.studentsService.deleteStudentById(id).subscribe(
         (data) => {
           this.showAlert('Étudiant Supprimé', 'Opération complétée');
           console.log(data);
           this.refresh(data);
-          registration.unsubscribe();
         },
         (err) => {
           return this.handleError(err);
@@ -68,9 +69,11 @@ export class StudentsPage implements OnInit {
 
   refresh(data: any) {
     console.log('data', data);
-    this.studentsService.getStudents().subscribe((data) => {
-      this.students = data;
-    });
+    this.subStudentsRefresh = this.studentsService
+      .getStudents()
+      .subscribe((data) => {
+        this.students = data;
+      });
   }
 
   handleError(error: any) {
@@ -92,11 +95,14 @@ export class StudentsPage implements OnInit {
   }
 
   ngOnDestroy() {
-    this.registration.unsubscribe();
-    console.log('destroyed');
-  }
-
-  ionViewDidLeave() {
-    this.ngOnDestroy();
+    if (this.subStudents) {
+      this.subStudents.unsubscribe();
+    } else if (this.subStudentDel) {
+      this.subStudentDel.unsubscribe();
+    } else if (this.subStudentsRefresh) {
+      this.subStudentsRefresh.unsubscribe();
+    } else {
+      return false;
+    }
   }
 }

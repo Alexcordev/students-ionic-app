@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { User } from '../../interfaces/user';
 import { AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
@@ -82,4 +82,5 @@ export class LoginPage implements OnInit {
       })
       .then((alertEl) => alertEl.present());
   }
+
 }

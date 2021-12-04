@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuController, Platform } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 import { AuthService } from '../../src/app/services/auth.service';
 
 @Component({
@@ -8,9 +9,11 @@ import { AuthService } from '../../src/app/services/auth.service';
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
 })
-export class AppComponent {
+export class AppComponent implements OnDestroy{
   message: string;
   text: string;
+  subLogout: Subscription;
+
   constructor(
     private menu: MenuController,
     private router: Router,
@@ -24,12 +27,18 @@ export class AppComponent {
 
   logout() {
     this.message = 'Vous êtes maintenant déconnecté';
-    this.authService.logout().subscribe((data) => {
+    this.subLogout = this.authService.logout().subscribe((data) => {
       this.text = 'Au revoir ';
       console.log(data);
       this.authService.showAlert(this.text, this.message);
       this.openEnd();
       this.router.navigate(['/login']);
     });
+  }
+
+  ngOnDestroy() {
+    if(this.subLogout) {
+      this.subLogout.unsubscribe();
+    }
   }
 }

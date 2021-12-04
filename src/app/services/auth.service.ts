@@ -8,8 +8,8 @@ import { map } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class AuthService {
-  baseUrl: string = '/auth';
-  url: string = '/api';
+  baseUrl: string = 'http://192.168.2.14:3000/auth';
+  url: string = 'http://192.168.2.14:3000/api';
   private _user = new BehaviorSubject<User>(null);
 
   constructor(

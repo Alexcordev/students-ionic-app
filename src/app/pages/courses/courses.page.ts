@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { CoursesService } from 'src/app/services/courses.service';
 import { LoadingController, AlertController } from '@ionic/angular';
 import { finalize, tap } from 'rxjs/operators';
@@ -11,12 +12,14 @@ import { StudentsService } from 'src/app/services/students.service';
   templateUrl: './courses.page.html',
   styleUrls: ['./courses.page.scss'],
 })
-export class CoursesPage implements OnInit {
+export class CoursesPage implements OnInit, OnDestroy {
   message: string;
   text: string;
   courses: Course[] = [];
   errorFromServer: string = '';
-  registration: any;
+  coursesSub: Subscription;
+  coursesSub1: Subscription;
+  coursesSub2: Subscription;
 
   constructor(
     private alertCtrl: AlertController,
@@ -36,7 +39,7 @@ export class CoursesPage implements OnInit {
   async getAllCourses() {
     let loading = await this.loadingCtrl.create();
     await loading.present();
-    this.registration = this.coursesService
+    this.coursesSub = this.coursesService
       .getCourses()
       .pipe(finalize(() => loading.dismiss()))
       .subscribe(
@@ -52,12 +55,11 @@ export class CoursesPage implements OnInit {
 
   deleteCourse(id: any) {
     if (id) {
-      let registration = this.coursesService.deleteCourseById(id).subscribe(
+      this.coursesSub1 = this.coursesService.deleteCourseById(id).subscribe(
         (data) => {
           this.showAlert('Cours Supprimé', 'Opération complétée');
           console.log(data);
           this.refresh(data);
-          registration.unsubscribe();
         },
         (err) => {
           return this.handleError(err);
@@ -68,7 +70,7 @@ export class CoursesPage implements OnInit {
 
   refresh(data: any) {
     console.log('data', data);
-    this.coursesService.getCourses().subscribe((data) => {
+    this.coursesSub2 = this.coursesService.getCourses().subscribe((data) => {
       this.courses = data;
     });
   }
@@ -92,11 +94,14 @@ export class CoursesPage implements OnInit {
   }
 
   ngOnDestroy() {
-    this.registration.unsubscribe();
-    console.log('destroyed');
-  }
-
-  ionViewWillLeave() {
-    this.ngOnDestroy();
+    if (this.coursesSub) {
+      this.coursesSub.unsubscribe();
+    } else if (this.coursesSub1) {
+      this.coursesSub1.unsubscribe();
+    } else if (this.coursesSub2) {
+      this.coursesSub2.unsubscribe();
+    } else {
+      return false;
+    }
   }
 }

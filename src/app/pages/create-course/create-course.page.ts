@@ -1,7 +1,8 @@
-import { Component, ElementRef, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 import { Student } from 'src/app/interfaces/student';
 import { StudentsService } from 'src/app/services/students.service';
 import { Course } from '../../interfaces/course';
@@ -12,14 +13,15 @@ import { CoursesService } from '../../services/courses.service';
   templateUrl: './create-course.page.html',
   styleUrls: ['./create-course.page.scss'],
 })
-export class CreateCoursePage implements OnInit {
+export class CreateCoursePage implements OnInit, OnDestroy {
   message: string = '';
   text: string = '';
   addCourseForm: any;
   courses: Course[] = [];
   students: Student[] = [];
-  registration: any;
-  registration1: any;
+  subCourses: Subscription;
+  subStudents: Subscription;
+  subCreation: Subscription;
 
   constructor(
     private fb: FormBuilder,
@@ -34,11 +36,11 @@ export class CreateCoursePage implements OnInit {
   }
 
   ionViewDidEnter() {
-    this.registration = this.coursesService.getCourses().subscribe((data) => {
+    this.subCourses = this.coursesService.getCourses().subscribe((data) => {
       console.log(data);
       this.courses = data;
     });
-    this.registration1 = this.studentsService
+    this.subStudents = this.studentsService
       .getStudents()
       .subscribe((data) => {
         console.log(data);
@@ -58,7 +60,7 @@ export class CreateCoursePage implements OnInit {
   createCourse() {
     if (this.addCourseForm.valid) {
       console.log(this.addCourseForm);
-      this.coursesService.createCourse(this.addCourseForm.value).subscribe(
+      this.subCreation = this.coursesService.createCourse(this.addCourseForm.value).subscribe(
         (data) => this.handleSuccess(data),
         (error) => this.handleError(error)
       );
@@ -70,6 +72,7 @@ export class CreateCoursePage implements OnInit {
     console.log('OK handleSuccess - course created', data);
     this.addCourseForm.reset();
     this.coursesService.dispatchCourseCreated(data._id);
+    this.router.navigate(['/home/courses']);
   }
 
   handleError(error: any) {
@@ -87,18 +90,20 @@ export class CreateCoursePage implements OnInit {
       .then((alertEl) => alertEl.present());
   }
 
-  ngOnDestroy() {
-    this.registration.unsubscribe();
-    this.registration1.unsubscribe();
-  }
-
   close() {
-    this.ngOnDestroy();
     this.addCourseForm.reset();
     this.router.navigate(['/home/courses']);
   }
 
-  ionViewDidLeave() {
-    this.ngOnDestroy();
+  ngOnDestroy() {
+    if(this.subCourses) {
+      this.subCourses.unsubscribe();
+    } else if(this.subStudents) {
+      this.subStudents.unsubscribe();
+    } else if(this.subCreation) {
+      this.subCreation.unsubscribe();
+    } else {
+      return false;
+    }
   }
 }

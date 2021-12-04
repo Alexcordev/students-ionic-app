@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { Course } from '../../interfaces/course';
 import { Student } from '../../interfaces/student';
 import { StudentsService } from '../../services/students.service';
@@ -11,14 +11,14 @@ import { CoursesService } from '../../services/courses.service';
   templateUrl: './student-details.page.html',
   styleUrls: ['./student-details.page.scss'],
 })
-export class StudentDetailsPage implements OnInit {
+export class StudentDetailsPage implements OnInit, OnDestroy {
   student$: Observable<Student>;
   courses: any[] = [];
   id: any;
   studentCourses: any[] = [];
   message: string = '';
   text: string = '';
-  registration: any;
+  subCourses: Subscription;
 
   constructor(
     private router: Router,
@@ -32,7 +32,7 @@ export class StudentDetailsPage implements OnInit {
   ionViewDidEnter() {
     this.id = this.activatedRoute.snapshot.paramMap.get('id');
     this.student$ = this.studentsService.getStudentById(this.id);
-    this.registration = this.coursesService.getCourses().subscribe((res) => {
+    this.subCourses = this.coursesService.getCourses().subscribe((res) => {
       this.courses = res;
       this.getStudentCourses(this.courses);
       console.log('view entered');
@@ -57,13 +57,13 @@ export class StudentDetailsPage implements OnInit {
     console.log(this.studentCourses);
   }
 
-  ngOnDestroy() {
-    this.registration.unsubscribe();
-    console.log('Destroyed');
+  close() {
+    this.router.navigate(['/home/students']);
   }
 
-  close() {
-    this.ngOnDestroy();
-    this.router.navigate(['/home/students']);
+  ngOnDestroy() {
+    if (this.subCourses) {
+      this.subCourses.unsubscribe();
+    }
   }
 }

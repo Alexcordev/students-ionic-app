@@ -1,7 +1,8 @@
-import { Component, ElementRef, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 import { Student } from '../../interfaces/student';
 import { StudentsService } from '../../services/students.service';
 
@@ -10,12 +11,13 @@ import { StudentsService } from '../../services/students.service';
   templateUrl: './create-student.page.html',
   styleUrls: ['./create-student.page.scss'],
 })
-export class CreateStudentPage implements OnInit {
+export class CreateStudentPage implements OnInit, OnDestroy {
   message: string = '';
   text: string = '';
   addStudentForm: any;
   students: Student[] = [];
-  registration: any;
+  subStudent: Subscription;
+  subCreateStudent: Subscription;
 
   constructor(
     private fb: FormBuilder,
@@ -29,7 +31,7 @@ export class CreateStudentPage implements OnInit {
   }
 
   ionViewDidEnter() {
-    this.registration = this.studentsService.getStudents().subscribe((data) => {
+    this.subStudent = this.studentsService.getStudents().subscribe((data) => {
       console.log(data);
       this.students = data;
     });
@@ -46,7 +48,7 @@ export class CreateStudentPage implements OnInit {
   createStudent() {
     if (this.addStudentForm.valid) {
       console.log(this.addStudentForm);
-      this.studentsService.createStudent(this.addStudentForm.value).subscribe(
+      this.subCreateStudent = this.studentsService.createStudent(this.addStudentForm.value).subscribe(
         (data) => this.handleSuccess(data),
         (error) => this.handleError(error)
       );
@@ -58,6 +60,7 @@ export class CreateStudentPage implements OnInit {
     console.log('OK handleSuccess - student created', data);
     this.addStudentForm.reset();
     this.studentsService.dispatchStudentCreated(data._id);
+    this.router.navigate(['/home/students']);
   }
 
   handleError(error: any) {
@@ -75,17 +78,19 @@ export class CreateStudentPage implements OnInit {
       .then((alertEl) => alertEl.present());
   }
 
-  ngOnDestroy() {
-    this.registration.unsubscribe();
-  }
-
   close() {
-    this.ngOnDestroy();
     this.addStudentForm.reset();
     this.router.navigate(['/home/students']);
   }
 
-  ionViewDidLeave() {
-    this.ngOnDestroy();
+  ngOnDestroy() {
+    if(this.subStudent) {
+      this.subStudent.unsubscribe();
+    } else if(this.subCreateStudent) {
+      this.subCreateStudent.unsubscribe();
+    } else {
+      return false;
+    }
+
   }
 }

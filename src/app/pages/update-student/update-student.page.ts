@@ -1,24 +1,25 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
+import { Component, OnInit, ElementRef, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StudentsService } from '../../services/students.service';
 import { FormBuilder, FormGroupDirective } from '@angular/forms';
 import { AlertController } from '@ionic/angular';
 import { Student } from 'src/app/interfaces/student';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-update-student',
   templateUrl: './update-student.page.html',
   styleUrls: ['./update-student.page.scss'],
 })
-export class UpdateStudentPage implements OnInit {
+export class UpdateStudentPage implements OnInit, OnDestroy {
   updateStudentForm: any;
   studentId: any = '';
   student: Student;
   message: string = '';
   text: string = '';
   errorFromServer = '';
-  registration: any;
-  registration1: any;
+  subStudent: Subscription;
+  subStudentUpdate: Subscription;
 
   constructor(
     private router: Router,
@@ -32,7 +33,7 @@ export class UpdateStudentPage implements OnInit {
 
   ionViewDidEnter() {
     this.studentId = this.activatedRoute.snapshot.paramMap.get('id');
-    this.registration = this.studentsService
+    this.subStudent = this.studentsService
       .getStudentById(this.studentId)
       .subscribe(
         (data) => {
@@ -55,7 +56,7 @@ export class UpdateStudentPage implements OnInit {
   updateStudent(formDirective: FormGroupDirective) {
     if (this.updateStudentForm.valid) {
       console.log(this.updateStudentForm);
-      this.registration1 = this.studentsService
+      this.subStudentUpdate = this.studentsService
         .updateStudentById(this.studentId, this.updateStudentForm.value)
         .subscribe(
           (data) => this.handleSuccess(data, formDirective),
@@ -95,18 +96,17 @@ export class UpdateStudentPage implements OnInit {
       .then((alertEl) => alertEl.present());
   }
 
-  ngOnDestroy() {
-    this.registration.unsubscribe();
-    this.registration1.unsubscribe();
-    console.log('destroyed');
-  }
-
   close() {
-    this.registration.unsubscribe();
     this.router.navigate(['/home/students']);
   }
 
-  ionViewDidLeave() {
-    this.registration.unsubscribe();
+  ngOnDestroy() {
+    if (this.subStudent) {
+      this.subStudent.unsubscribe();
+    } else if (this.subStudentUpdate) {
+      this.subStudentUpdate.unsubscribe();
+    } else {
+      return false;
+    }
   }
 }
