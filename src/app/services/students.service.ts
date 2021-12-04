@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
   providedIn: 'root',
 })
 export class StudentsService {
-  baseUrl: string = '/api';
+  baseUrl: string = 'http://192.168.2.14:3000/api';
   students: Student[] = [];
   private studentUpdated = new Subject<string>();
   private studentCreated = new Subject<string>();
