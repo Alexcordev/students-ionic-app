@@ -1,10 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { Course } from '../../interfaces/course';
 import { Student } from '../../interfaces/student';
 import { StudentsService } from '../../services/students.service';
 import { CoursesService } from '../../services/courses.service';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-student-details',
@@ -12,26 +13,35 @@ import { CoursesService } from '../../services/courses.service';
   styleUrls: ['./student-details.page.scss'],
 })
 export class StudentDetailsPage implements OnInit, OnDestroy {
-  student$: Observable<Student>;
+  student: Student;
   courses: any[] = [];
   id: any;
   studentCourses: any[] = [];
   message: string = '';
   text: string = '';
+  subStudent: Subscription;
   subCourses: Subscription;
 
   constructor(
     private router: Router,
     private coursesService: CoursesService,
     private activatedRoute: ActivatedRoute,
-    private studentsService: StudentsService
+    private studentsService: StudentsService,
+    private navCtrl: NavController
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.activatedRoute.paramMap.subscribe(paramMap => {
+      if(!paramMap.has('id')) {
+        this.navCtrl.navigateBack('/home/students');
+      }
+      this.subStudent = this.studentsService.getStudentById(paramMap.get('id')).subscribe(student => {
+        this.student = student;
+      });
+    })
+  }
 
   ionViewDidEnter() {
-    this.id = this.activatedRoute.snapshot.paramMap.get('id');
-    this.student$ = this.studentsService.getStudentById(this.id);
     this.subCourses = this.coursesService.getCourses().subscribe((res) => {
       this.courses = res;
       this.getStudentCourses(this.courses);
@@ -62,7 +72,9 @@ export class StudentDetailsPage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.subCourses) {
+    if (this.subStudent) {
+      this.subStudent.unsubscribe();
+    } else if (this.subCourses) {
       this.subCourses.unsubscribe();
     }
   }

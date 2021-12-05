@@ -7,7 +7,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content *ngIf="(student$ | async) as st; else empty">
+<ion-content *ngIf="student as st; else empty">
   <ion-grid>
     <ion-row>
       <ion-col>

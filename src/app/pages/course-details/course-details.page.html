@@ -7,7 +7,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content *ngIf="(course$ | async) as crs; else empty">
+<ion-content *ngIf="course as crs; else empty">
   <ion-grid>
     <ion-row>
       <ion-col>
