@@ -27,7 +27,7 @@
           </ion-item>
           <ion-item>
             <ion-label>Naissance</ion-label>
-            <ion-input type="date" formControlName="dob" required></ion-input>
+            <ion-datetime placeholder="Sélectionner" min="1900" max="2022" display-format="DD/MM/YYYY" picker-format="DD MM YYYY" formControlName="dob" required></ion-datetime>
           </ion-item>
         </ion-list>
         <ion-button type="submit" color="danger" style="margin: 10px;" [disabled]="addStudentForm.invalid">Ajouter

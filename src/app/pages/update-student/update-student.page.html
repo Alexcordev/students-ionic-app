@@ -16,7 +16,7 @@
             <ion-card-header class="card-header">
               <img src="../../../assets/images/student-avatar128x128.png" width="128" height="128">
               <ion-card-title class="card-title" >{{ st.surname }}&nbsp;{{ st.name }}</ion-card-title>
-              <ion-card-subtitle>{{st.dob}}</ion-card-subtitle>
+              <ion-card-subtitle>{{st.dob | date: 'dd/MM/yyyy'}}</ion-card-subtitle>
             </ion-card-header>
             <ion-card-content class="card-body">
               <form [formGroup]="updateStudentForm" #formDirective="ngForm" (submit)="updateStudent(formDirective)">
@@ -33,7 +33,7 @@
                   </ion-item>
                   <ion-item>
                     <ion-label>Naissance</ion-label>
-                    <ion-input type="date" formControlName="dob" name="dob" [value]="st.dob" required></ion-input>
+                    <ion-datetime placeholder="{{st.dob}}" min="1900" max="2022" display-format="DD/MM/YYYY" picker-format="DD MM YYYY" formControlName="dob" [value]="st.dob" required></ion-datetime>
                   </ion-item>
                 </ion-list>
                 <div class="card-footer">

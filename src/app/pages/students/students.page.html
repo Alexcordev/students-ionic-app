@@ -23,7 +23,7 @@
                   <img src="../../../assets/images/student-avatar48x48.png" width="64" height="64">
                 </ion-avatar>
                 <ion-label>{{ student.surname }}&nbsp;{{ student.name }}</ion-label>
-                <ion-label>{{ student.dob }}</ion-label>
+                <ion-label>{{ student.dob | date: 'dd/MM/yyyy'}}</ion-label>
               </ion-item>
               <ion-item-options side="end">
                 <ion-item-option color="light" [routerLink]="['/home/create-student']">
