@@ -16,8 +16,8 @@
             <ion-card-header class="card-header">
               <img src="../../../assets/images/graduate-icon.png" width="128" height="128">
               <ion-card-title class="card-title" >{{ crs.name }}</ion-card-title>
-              <ion-card-subtitle>Dur&eacute;e&nbsp;{{crs.duration}}</ion-card-subtitle>
-              <ion-card-subtitle>D&eacute;but:&nbsp;{{crs.start}}</ion-card-subtitle>
+              <ion-card-subtitle>Dur&eacute;e&nbsp;{{crs.duration | date: 'h:mm'}}</ion-card-subtitle>
+              <ion-card-subtitle>D&eacute;but:&nbsp;{{crs.start | date: 'h:mm'}}</ion-card-subtitle>
             </ion-card-header>
             <ion-card-content class="card-body">
               <div *ngFor="let student of studentCourses">
